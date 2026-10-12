@@ -1,5 +1,5 @@
 # Build
-FROM eclipse-temurin:21-jdk-alpine AS build
+FROM eclipse-temurin:21-jdk AS build
 WORKDIR /app
 COPY mvnw .
 COPY .mvn .mvn
@@ -7,13 +7,14 @@ COPY pom.xml .
 RUN chmod +x mvnw && ./mvnw -q -DskipTests dependency:go-offline
 COPY src src
 RUN ./mvnw -q -DskipTests package \
-    && cp target/*.jar /app/app.jar
+    && mv target/backend-0.0.1-SNAPSHOT.jar /app/app.jar
 
-# Runtime
-FROM eclipse-temurin:21-jre-alpine
+# Runtime (non-Alpine — better Neon SSL / DNS on Railway)
+FROM eclipse-temurin:21-jre
 WORKDIR /app
-RUN addgroup -S spring && adduser -S spring -G spring
+RUN groupadd --system spring && useradd --system --gid spring spring
 USER spring:spring
 COPY --from=build /app/app.jar app.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-XX:+UseContainerSupport", "-XX:MaxRAMPercentage=75.0", "-jar", "app.jar"]
+ENV JAVA_TOOL_OPTIONS="-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0"
+ENTRYPOINT ["java", "-jar", "app.jar"]

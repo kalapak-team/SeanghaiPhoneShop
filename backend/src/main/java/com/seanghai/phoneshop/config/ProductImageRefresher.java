@@ -14,7 +14,19 @@ import java.util.Locale;
 @Configuration
 public class ProductImageRefresher {
 
-    public static final String BASE = "http://localhost:8080/products/";
+    /**
+     * Public origin for product image URLs.
+     * Set {@code APP_PUBLIC_URL=https://seanghaiphoneshop-production.up.railway.app} on Railway.
+     */
+    public static final String BASE = resolveImageBase();
+
+    private static String resolveImageBase() {
+        String root = System.getenv("APP_PUBLIC_URL");
+        if (root == null || root.isBlank()) {
+            root = "http://localhost:8080";
+        }
+        return root.replaceAll("/+$", "") + "/products/";
+    }
 
     /** 70 original white-background catalog images */
     public static final List<String> ALL_IMAGES = List.of(

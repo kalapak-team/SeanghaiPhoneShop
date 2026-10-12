@@ -5,10 +5,12 @@ import com.seanghai.phoneshop.repository.BrandRepository;
 import com.seanghai.phoneshop.repository.CategoryRepository;
 import com.seanghai.phoneshop.repository.ProductRepository;
 import com.seanghai.phoneshop.util.SlugUtil;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Bean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
+import org.springframework.context.event.EventListener;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -22,22 +24,47 @@ import java.util.stream.Collectors;
 @Configuration
 public class BulkProductSeeder {
 
+    private static final Logger log = LoggerFactory.getLogger(BulkProductSeeder.class);
     private static final int TARGET = 1000;
+
+    private final ProductRepository products;
+    private final BrandRepository brands;
+    private final CategoryRepository categories;
+    private final boolean seedEnabled;
+
+    public BulkProductSeeder(
+            ProductRepository products,
+            BrandRepository brands,
+            CategoryRepository categories,
+            @Value("${app.seed:true}") boolean seedEnabled
+    ) {
+        this.products = products;
+        this.brands = brands;
+        this.categories = categories;
+        this.seedEnabled = seedEnabled;
+    }
 
     private record Template(String name, String brandSlug, String categorySlug, double price, boolean secondhand) {}
 
-    @Bean
-    @Order(150)
-    CommandLineRunner seedBulkProducts(
-            ProductRepository products,
-            BrandRepository brands,
-            CategoryRepository categories
-    ) {
-        return args -> fillToTarget(products, brands, categories);
+    /** Runs after the web server is up so Railway health checks can succeed during long seeds. */
+    @EventListener(ApplicationReadyEvent.class)
+    public void seedBulkProducts() {
+        if (!seedEnabled) {
+            log.info("Bulk product seed skipped (app.seed=false)");
+            return;
+        }
+        Thread.startVirtualThread(() -> {
+            try {
+                fillToTarget(products, brands, categories);
+            } catch (Exception ex) {
+                log.error("Bulk product seed failed", ex);
+            }
+        });
     }
 
     @Transactional
     void fillToTarget(ProductRepository products, BrandRepository brands, CategoryRepository categories) {
+        log.info("Bulk product seed starting (current count={})", products.count());
         long existing = products.count();
         if (existing >= TARGET) {
             return;
