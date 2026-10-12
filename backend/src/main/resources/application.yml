@@ -2,31 +2,32 @@ spring:
   application:
     name: SeanghaiPhoneShop
   datasource:
-    url: jdbc:postgresql://127.0.0.1:5433/seanghai_phone_shop
-    username: seanghai
-    password: seanghai123
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://127.0.0.1:5433/seanghai_phone_shop}
+    username: ${SPRING_DATASOURCE_USERNAME:seanghai}
+    password: ${SPRING_DATASOURCE_PASSWORD:seanghai123}
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:update}
     open-in-view: false
     properties:
       hibernate:
-        format_sql: true
+        format_sql: false
   servlet:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
 
 server:
-  port: 8080
+  port: ${PORT:8080}
+  forward-headers-strategy: framework
 
 app:
   jwt:
-    secret: SeanghaiPhoneShopJwtSecretKey2026MustBeLongEnoughForHS256Algorithm
-    expiration-ms: 86400000
+    secret: ${APP_JWT_SECRET:SeanghaiPhoneShopJwtSecretKey2026MustBeLongEnoughForHS256Algorithm}
+    expiration-ms: ${APP_JWT_EXPIRATION_MS:86400000}
   cors:
-    allowed-origins: http://localhost:3000,http://localhost:3001,http://127.0.0.1:3000,http://127.0.0.1:3001
-  seed: true
+    allowed-origins: ${APP_CORS_ALLOWED_ORIGINS:http://localhost:3000,http://localhost:3001,http://127.0.0.1:3000,http://127.0.0.1:3001}
+  seed: ${APP_SEED:true}
 
 logging:
   level:
