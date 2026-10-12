@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: seanghai-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: seanghai_phone_shop
+      POSTGRES_USER: seanghai
+      POSTGRES_PASSWORD: seanghai123
+    ports:
+      - "5433:5432"
+    volumes:
+      - seanghai_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U seanghai -d seanghai_phone_shop"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  seanghai_pgdata:

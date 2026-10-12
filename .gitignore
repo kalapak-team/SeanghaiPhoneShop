@@ -1,0 +1,12 @@
+**/node_modules/
+**/.next/
+**/out/
+**/target/
+**/.env
+**/.env.local
+**/*.log
+**/.idea/
+**/.vscode/
+**/uploads/
+backend/HELP.md
+**/.DS_Store

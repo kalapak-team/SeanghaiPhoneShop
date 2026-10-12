@@ -1,0 +1,286 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Kantumruy+Pro:wght@400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+body {
+  @apply bg-white text-ink antialiased;
+}
+
+.container-xl {
+  @apply mx-auto w-full max-w-[1400px] px-4;
+}
+
+.btn-gold {
+  @apply rounded-full bg-gold px-6 py-2.5 font-semibold text-white transition hover:bg-gold-dark;
+}
+
+.product-row {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.product-row::-webkit-scrollbar {
+  display: none;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 32s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes kenburns {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.06);
+  }
+}
+
+@keyframes float-y {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes search-panel {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.animate-search-panel {
+  animation: search-panel 0.22s ease-out both;
+}
+
+.animate-fade-up {
+  animation: fade-up 0.7s ease both;
+}
+
+.animate-kenburns {
+  animation: kenburns 8s ease-out forwards;
+}
+
+.animate-float {
+  animation: float-y 4.5s ease-in-out infinite;
+}
+
+/* 3D deal banner */
+.cta-grid {
+  background-image: linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(70% 70% at 60% 50%, #000 30%, transparent 100%);
+  -webkit-mask-image: radial-gradient(70% 70% at 60% 50%, #000 30%, transparent 100%);
+}
+
+.cta-scene {
+  perspective: 1200px;
+}
+
+.cta-phone {
+  left: 50%;
+  top: 50%;
+  width: 140px;
+  height: 320px;
+  margin-left: -70px;
+  margin-top: -165px;
+  z-index: 3;
+}
+
+.cta-watch {
+  left: 0;
+  bottom: 8%;
+  width: 105px;
+  height: 125px;
+  z-index: 4;
+}
+
+.cta-buds {
+  right: 0;
+  top: 10%;
+  width: 100px;
+  height: 116px;
+  z-index: 2;
+}
+
+@media (min-width: 768px) {
+  .cta-phone {
+    width: 180px;
+    height: 410px;
+    margin-left: -90px;
+    margin-top: -210px;
+  }
+  .cta-watch {
+    left: 2%;
+    width: 165px;
+    height: 196px;
+  }
+  .cta-buds {
+    right: 2%;
+    width: 155px;
+    height: 180px;
+  }
+}
+
+@keyframes cta-float {
+  0%,
+  100% {
+    transform: translateY(0) rotateX(0) rotateY(0);
+  }
+  50% {
+    transform: translateY(-18px) rotateX(3deg) rotateY(-4deg);
+  }
+}
+
+.cta-float {
+  animation: cta-float 6.5s ease-in-out infinite;
+  transform-style: preserve-3d;
+}
+
+@keyframes cta-ring {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg) scale(1);
+  }
+  50% {
+    transform: translate(-50%, -50%) rotate(180deg) scale(1.04);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg) scale(1);
+  }
+}
+
+.cta-ring {
+  animation: cta-ring 24s linear infinite;
+  border-style: dashed;
+}
+
+.cta-reveal {
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+.cta-in .cta-reveal {
+  animation: fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.cta-scene > div {
+  opacity: 0;
+  transform: translateY(40px) scale(0.92);
+  transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cta-in .cta-scene > div {
+  opacity: 1;
+  transform: none;
+}
+
+.cta-in .cta-scene > .cta-phone {
+  transition-delay: 0.1s;
+}
+.cta-in .cta-scene > .cta-watch {
+  transition-delay: 0.3s;
+}
+.cta-in .cta-scene > .cta-buds {
+  transition-delay: 0.45s;
+}
+
+@keyframes cta-shimmer {
+  to {
+    background-position: 200% center;
+  }
+}
+
+.cta-shimmer {
+  background: linear-gradient(90deg, #0071e3 0%, #7cc2ff 35%, #0071e3 60%, #0071e3 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: cta-shimmer 4s linear infinite;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal-in {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .animate-fade-up,
+  .animate-kenburns,
+  .animate-float,
+  .animate-marquee,
+  .animate-search-panel,
+  .cta-float,
+  .cta-ring,
+  .cta-shimmer {
+    animation: none;
+  }
+
+  .cta-reveal,
+  .cta-scene > div {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
