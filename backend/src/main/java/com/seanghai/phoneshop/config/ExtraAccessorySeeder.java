@@ -31,7 +31,13 @@ public class ExtraAccessorySeeder {
             BrandRepository brands,
             CategoryRepository categories
     ) {
-        return args -> insertMissing(products, brands, categories);
+        return args -> {
+            try {
+                insertMissing(products, brands, categories);
+            } catch (Exception ex) {
+                System.err.println("Extra accessory seed skipped: " + ex.getMessage());
+            }
+        };
     }
 
     @Transactional
@@ -45,14 +51,13 @@ public class ExtraAccessorySeeder {
         Map<String, Category> categoryMap = categories.findAll().stream()
                 .collect(Collectors.toMap(Category::getSlug, c -> c, (a, b) -> a));
 
-        Brand anker = brandMap.getOrDefault("anker", brandMap.values().iterator().next());
-        Brand apple = brandMap.getOrDefault("apple", anker);
-        Brand hoco = brandMap.getOrDefault("hoco", anker);
-        Brand xiaomi = brandMap.getOrDefault("xiaomi", anker);
-        Brand samsung = brandMap.getOrDefault("samsung", anker);
+        if (brandMap.isEmpty() || categoryMap.isEmpty()) {
+            return;
+        }
+
+        Brand fallbackBrand = brandMap.values().iterator().next();
+        Brand anker = brandMap.getOrDefault("anker", fallbackBrand);
         Category accessories = categoryMap.get("accessories");
-        Category computer = categoryMap.getOrDefault("computer", accessories);
-        Category watch = categoryMap.getOrDefault("watch", accessories);
         if (accessories == null) {
             return;
         }

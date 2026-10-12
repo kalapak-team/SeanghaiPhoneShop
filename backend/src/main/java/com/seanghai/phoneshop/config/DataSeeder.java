@@ -6,6 +6,7 @@ import com.seanghai.phoneshop.util.SlugUtil;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
@@ -32,6 +33,7 @@ public class DataSeeder {
     private static final String IMG_PROJECTOR = BASE + "projector.jpg";
 
     @Bean
+    @Order(100)
     CommandLineRunner seedData(
             UserRepository users,
             BrandRepository brands,

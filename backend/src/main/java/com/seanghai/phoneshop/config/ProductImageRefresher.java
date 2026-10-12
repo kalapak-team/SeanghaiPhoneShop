@@ -52,7 +52,13 @@ public class ProductImageRefresher {
     @Bean
     @Order(200)
     CommandLineRunner refreshProductImages(ProductRepository productRepository) {
-        return args -> updateImages(productRepository);
+        return args -> {
+            try {
+                updateImages(productRepository);
+            } catch (Exception ex) {
+                System.err.println("Product image refresh skipped: " + ex.getMessage());
+            }
+        };
     }
 
     @Transactional

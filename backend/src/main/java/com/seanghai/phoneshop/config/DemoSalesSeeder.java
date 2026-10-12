@@ -74,7 +74,13 @@ public class DemoSalesSeeder {
             ShopOrderRepository orders,
             PasswordEncoder encoder
     ) {
-        return args -> fill(users, products, orders, encoder);
+        return args -> {
+            try {
+                fill(users, products, orders, encoder);
+            } catch (Exception ex) {
+                System.err.println("Demo sales seed skipped: " + ex.getMessage());
+            }
+        };
     }
 
     @Transactional
